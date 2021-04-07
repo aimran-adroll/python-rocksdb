@@ -1,0 +1,30 @@
+name: CI
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [pybind11-exp-add-ingest]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test_runner:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:  [ubuntu]
+        python-version: [3.7, 3.8, 3.9, pypy3]
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Setup Environment
+      run: |
+				python setup.py install
+    - name: Run tests
+      run: echo "hello world"
