@@ -3,7 +3,6 @@
 
 namespace py = pybind11;
 
-//fucking trampoline!
 class PySstFileWriter: public SstFileWriter{
 
   public:
@@ -33,7 +32,7 @@ void init_sst_file_writer(py::module & m) {
   py::class_<PySstFileWriter, SstFileWriter>(m, "SstFileWriter")
     .def(py::init([] (const EnvOptions& e, const Options& o) {
           return std::unique_ptr<PySstFileWriter>(new PySstFileWriter(e, o, nullptr, true, Env::IOPriority::IO_TOTAL, false));}))
-   .def("open", (Status (PySstFileWriter::*) (const std::string&)) &PySstFileWriter::Open)
+    .def("open", (Status (PySstFileWriter::*) (const std::string&)) &PySstFileWriter::Open)
     .def("put", (Status (PySstFileWriter::*) (const std::string&, const std::string&)) &PySstFileWriter::Put)
     .def("merge", (Status (PySstFileWriter::*) (const std::string&, const std::string&)) &PySstFileWriter::Merge)
     .def("finish", (Status (PySstFileWriter::*) ()) &PySstFileWriter::Finish);
