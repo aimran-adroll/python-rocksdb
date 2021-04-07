@@ -24,7 +24,8 @@ void init_db(py::module & m) {
     .def("merge", (Status (py_DB::*) (const WriteOptions& options, const std::string& key, const std::string& value)) &py_DB::Merge)
     .def("close", &py_DB::Close)
     .def("create_column_family", &py_DB::CreateColumnFamily)
-    .def("iterator", &py_DB::NewIterator);
+    .def("iterator", &py_DB::NewIterator)
+    .def("ingest_external_file", &py_DB::IngestExternalFile);
     // .def_readonly("DefaultColumnFamilyName", &rocksdb::kDefaultColumnFamilyName);
   m.attr("DefaultColumnFamilyName") = rocksdb::kDefaultColumnFamilyName;
 

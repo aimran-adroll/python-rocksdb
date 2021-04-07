@@ -5,7 +5,6 @@
 #include <pybind11/stl_bind.h>
 
 
-
 PYBIND11_MAKE_OPAQUE(std::vector<ColumnFamilyHandle*>);
 PYBIND11_MAKE_OPAQUE(std::vector<ColumnFamilyDescriptor, std::allocator<ColumnFamilyDescriptor>>);
 
@@ -183,6 +182,15 @@ std::unique_ptr<IteratorWrapper> py_DB::NewIterator(const ReadOptions& options) 
 }
 
 
+Status py_DB::IngestExternalFile(py::list external_files, 
+					const IngestExternalFileOptions& options) {
+
+   auto files = external_files.cast<std::vector<std::string>>();
+   return db_ptr->IngestExternalFile(files, options);
+}
+
+
+
 
 void init_db(py::module &);
 void init_option(py::module &);
@@ -194,6 +202,7 @@ void init_filter_policy(py::module &);
 void init_merge_operator(py::module &);
 void init_transaction_db(py::module &);
 void init_snapshot(py::module &);
+void init_sst_file_writer(py::module &);
 
 PYBIND11_MODULE(pyrocksdb, m) {
     // optional module docstring
@@ -237,6 +246,7 @@ PYBIND11_MODULE(pyrocksdb, m) {
   init_slice(m);
   init_status(m);
   init_write_batch(m);
+  init_sst_file_writer(m);
   init_iterator(m);
   init_filter_policy(m);
   init_merge_operator(m);

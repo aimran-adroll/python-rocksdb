@@ -9,6 +9,7 @@
 #include <rocksdb/write_batch.h>
 #include <rocksdb/table.h>
 #include <rocksdb/filter_policy.h>
+#include <rocksdb/sst_file_writer.h>
 #include <rocksdb/cache.h>
 #include <rocksdb/snapshot.h>
 #include <utilities/merge_operators.h>
@@ -164,6 +165,11 @@ class py_DB {
     void Close();
     py::tuple CreateColumnFamily(const ColumnFamilyOptions& options, const std::string& column_family_name);
     std::unique_ptr<IteratorWrapper> NewIterator(const ReadOptions& options);
+
+
+    //IngestExternalFile loads a list of external SST files.
+    Status IngestExternalFile(py::list external_files, const IngestExternalFileOptions& options);
+   
     //FIXME: python gc
     ~py_DB();
     const std::string default_column_familiy_name();
