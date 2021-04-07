@@ -21,16 +21,17 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Ensure latest rocksdb
       run: |
         echo `pwd`
         cd lib/rocksdb
         git checkout master
         git pull
         cd ../..
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
     - name: Install libraries
       run: |
         sudo apt-get install -y \
