@@ -52,7 +52,7 @@ db.close()
 
 ### Complete example using external SST files
 
-```
+```python
 import pyrocksdb as pb
 
 e = pb.EnvOptions()
