@@ -59,7 +59,7 @@ class CMakeBuild(build_ext):
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             #  cmake_args = []
-            build_args += ['--', '-j4']
+            build_args += ['--', '-j8']
 
         #  env = os.environ.copy()
         #  env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(

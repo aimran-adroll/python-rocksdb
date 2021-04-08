@@ -389,47 +389,47 @@ def test_readonly_column_family():
     #  assert(blob.status.ok())
     #  assert(blob.data == b'value1')
 
-def test_merge_operator():
-    class AddMergeOperator(pyrocksdb.AssociativeMergeOperator):
-        def merge(self, existing_value, value):
-            # TODO: can we skip slice_to_byte and keep the efficiency?
-            print ('payyyaaaaa merge {}'.format(existing_value))
-            print ('payyyaaaaa merge {}'.format(value))
-            if existing_value:
-                s = int(value) + int(existing_value)
-                return (True, str(s).encode())
-            else:
-                return (True, str(int(value)).encode())
-
-        def Name(self):
-            return b"AddMergeOperator";
-
-    opts = pyrocksdb.Options()
-    # FIXME: we have to hold this reference otherwise the python object would be destroyed
-    merge_operator = AddMergeOperator()
-    db = pyrocksdb.DB()
-    opts.IncreaseParallelism()
-    opts.OptimizeLevelStyleCompaction()
-    opts.create_if_missing = True
-    opts.merge_operator = merge_operator
-    tmp = tempfile.TemporaryDirectory()
-    s = db.open(opts, tmp.name)
-    assert(s.ok())
-    wopts = pyrocksdb.WriteOptions()
-    ropts = pyrocksdb.ReadOptions()
-    s = db.merge(wopts, b"a", b"2")
-    assert(s.ok())
-    print('get1')
-    blob = db.get(ropts, b"a")
-    s = db.merge(wopts, b"a", b"3")
-    assert(s.ok())
-    print('get2')
-    blob = db.get(ropts, b"a")
-    #  print ('a')
-    #  while (True):
-        #  pass
-
-    #  assert blob.data == b'5'
+#def test_merge_operator():
+#    class AddMergeOperator(pyrocksdb.AssociativeMergeOperator):
+#        def merge(self, existing_value, value):
+#            # TODO: can we skip slice_to_byte and keep the efficiency?
+#            print ('payyyaaaaa merge {}'.format(existing_value))
+#            print ('payyyaaaaa merge {}'.format(value))
+#            if existing_value:
+#                s = int(value) + int(existing_value)
+#                return (True, str(s).encode())
+#            else:
+#                return (True, str(int(value)).encode())
+#
+#        def Name(self):
+#            return b"AddMergeOperator";
+#
+#    opts = pyrocksdb.Options()
+#    # FIXME: we have to hold this reference otherwise the python object would be destroyed
+#    merge_operator = AddMergeOperator()
+#    db = pyrocksdb.DB()
+#    opts.IncreaseParallelism()
+#    opts.OptimizeLevelStyleCompaction()
+#    opts.create_if_missing = True
+#    opts.merge_operator = merge_operator
+#    tmp = tempfile.TemporaryDirectory()
+#    s = db.open(opts, tmp.name)
+#    assert(s.ok())
+#    wopts = pyrocksdb.WriteOptions()
+#    ropts = pyrocksdb.ReadOptions()
+#    s = db.merge(wopts, b"a", b"2")
+#    assert(s.ok())
+#    print('get1')
+#    blob = db.get(ropts, b"a")
+#    s = db.merge(wopts, b"a", b"3")
+#    assert(s.ok())
+#    print('get2')
+#    blob = db.get(ropts, b"a")
+#    #  print ('a')
+#    #  while (True):
+#        #  pass
+#
+#    #  assert blob.data == b'5'
 
 
 def test_transaction_release_db_twice():
@@ -444,3 +444,31 @@ def test_transaction_release_db_twice():
 
     del db
     del txn  # will crash if txn tries to release the db object again
+
+def test_ingest_external_file(db):
+    e = pyrocksdb.EnvOptions()
+    o = pyrocksdb.Options()
+    ifo = pyrocksdb.IngestExternalFileOptions()
+    ro = pyrocksdb.ReadOptions()
+
+    tfs = [tempfile.NamedTemporaryFile().name for _ in range(3)]
+
+    # write a bunch of SST files
+    for i,f in enumerate(tfs):
+        w = pyrocksdb.SstFileWriter(e,o)
+        s = w.open(f)
+        assert(s.ok())
+        s = w.put(f'key_{i:03d}'.encode(), f'val_{i:03d}'.encode())
+        assert(s.ok())
+        s = w.finish()
+        assert(s.ok())
+
+    # read all ssts in a single db
+    s = db.ingest_external_file(tfs, ifo)
+    assert(s.ok())
+
+    # verify keys found
+    for i,f in enumerate(tfs):
+        key = f'key_{i:03d}'
+        blob = db.get(ro, f'key_{i:03d}')
+        assert(f'val_{i:03d}'.encode() == blob.data)

@@ -37,8 +37,12 @@ jobs:
         sudo apt-get install -y \
           cmake \
           libgflags-dev libsnappy-dev liblz4-dev libzstd-dev
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        pip install flake8 pytest
     - name: Install pyrocksdb
       run: |
         python setup.py install
     - name: Run tests
-      run: echo "hello world"
+      run: pytest

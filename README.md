@@ -1,6 +1,8 @@
 pyrocksdb
 =========
 
+![ci status](https://github.com/aimran-adroll/python-rocksdb/actions/workflows/main.yml/badge.svg)
+
 Python bindings for RocksDB.
 
 This project is under development, and more features are coming soon.
