@@ -73,6 +73,12 @@ class IteratorWrapper {
     Status status() const {
       return iterator->status();
     }
+
+    void Close() {
+      iterator.reset();
+    }
+
+
   private:
   std::unique_ptr<Iterator> iterator;
 };

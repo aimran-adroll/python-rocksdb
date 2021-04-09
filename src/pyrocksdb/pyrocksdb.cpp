@@ -288,6 +288,7 @@ PYBIND11_MODULE(pyrocksdb, m) {
       .def("prev", &IteratorWrapper::Prev)
       .def("key", &IteratorWrapper::key)
       .def("value", &IteratorWrapper::value)
+      .def("close", &IteratorWrapper::Close)
       .def("status", &IteratorWrapper::status);
 
   // m.def("append_1", &append_1);
