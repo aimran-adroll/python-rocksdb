@@ -12,6 +12,7 @@
 #include <rocksdb/sst_file_writer.h>
 #include <rocksdb/cache.h>
 #include <rocksdb/snapshot.h>
+#include <rocksdb/compression_type.h>
 #include <utilities/merge_operators.h>
 #include <rocksdb/utilities/transaction_db.h>
 #include <rocksdb/utilities/transaction.h>
@@ -161,6 +162,8 @@ class py_DB {
     Status Merge(const WriteOptions& options, ColumnFamilyHandle* column_family, const std::string& key, const std::string& value);
 
     Status Merge(const WriteOptions& options, const std::string& key, const std::string& value);
+
+    Status CompactRange();
 
     void Close();
     py::tuple CreateColumnFamily(const ColumnFamilyOptions& options, const std::string& column_family_name);

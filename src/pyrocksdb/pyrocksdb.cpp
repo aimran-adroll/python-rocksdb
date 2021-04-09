@@ -166,6 +166,10 @@ Status py_DB::Merge(const WriteOptions& options, const std::string& key, const s
   return db_ptr->Merge(options, key, value);
 }
 
+Status py_DB::CompactRange() {
+  return db_ptr->CompactRange(rocksdb::CompactRangeOptions(), nullptr, nullptr);
+}
+
 py::tuple py_DB::CreateColumnFamily(const ColumnFamilyOptions& options, const std::string& column_family_name) {
   // std::unique_ptr<ColumnFamilyHandleWrapper> cf_handle(new ColumnFamilyHandleWrapper());
   // ColumnFamilyHandleWrapper *cf_handle = new ColumnFamilyHandleWrapper();
@@ -203,6 +207,7 @@ void init_merge_operator(py::module &);
 void init_transaction_db(py::module &);
 void init_snapshot(py::module &);
 void init_sst_file_writer(py::module &);
+void init_compression_types(py::module &);
 
 PYBIND11_MODULE(pyrocksdb, m) {
     // optional module docstring
@@ -252,6 +257,7 @@ PYBIND11_MODULE(pyrocksdb, m) {
   init_merge_operator(m);
   init_transaction_db(m);
   init_snapshot(m);
+  init_compression_types(m);
   py::class_<Blob>(m, "Blob")
     .def(py::init<>())
     .def_readwrite("status", &Blob::status)
