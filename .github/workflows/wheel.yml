@@ -18,6 +18,14 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
 
+    - name: Ensure latest rocksdb
+      run: |
+        echo `pwd`
+        cd lib/rocksdb
+        git checkout master
+        git pull
+        cd ../..
+
     - name: Install deps
       run: python -m pip install twine build
 
