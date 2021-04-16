@@ -19,7 +19,8 @@ jobs:
       with:
         submodules: true
     - uses: actions/setup-python@v2
-      python-version: 3.7
+      with:
+        python-version: 3.7
 
     - name: Ensure latest rocksdb
       run: |
