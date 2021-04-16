@@ -21,13 +21,13 @@ RUN apt-get update -y && apt-get install -y \
 	# Install zstandard
 	libzstd-dev
 
-RUN python -m pip install --upgrade pip setuptools wheel \ 
+RUN python -m pip install --upgrade pip setuptools wheel twine \ 
     pip install flake8 pytest
 
 
-RUN git clone https://github.com/aimran-adroll/python-rocksdb.git --recursive -b pybind11-exp-add-ingest 
-WORKDIR /python-rocksdb
+#RUN git clone https://github.com/aimran-adroll/python-rocksdb.git --recursive -b pybind11-exp-add-ingest 
+#WORKDIR /python-rocksdb
 
-RUN python setup.py install
+#RUN python setup.py install
 
 ENTRYPOINT ["/bin/bash"]

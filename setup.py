@@ -14,6 +14,8 @@ from setuptools.command.test import test as TestCommand
 from shutil import copyfile, copymode
 import glob
 
+__version__ = "1.1.4"
+
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
@@ -78,7 +80,7 @@ class CMakeBuild(build_ext):
         #  test_bin = os.path.join(self.build_temp, 'python_cpp_example_test')
         #  self.copy_test_file(test_bin)
         #  print()  # Add an empty line for cleaner output
-        build_dir = os.path.join(self.build_lib, 'pyrocksdb')
+        build_dir = os.path.join(self.build_lib, 'urocksdb')
 
         libs = glob.glob(os.path.join(build_dir, '*.so'))
         dst = 'tests'
@@ -108,16 +110,16 @@ class CMakeBuild(build_ext):
         copymode(src_file, dest_file)
 
 setup(
-    name='python-rocksdb',
-    version='1.0',
-    author='Ming Hsuan Tu',
-    author_email='qrnnis2623891@gmail.com',
-    description='python bindings to rocksdb',
+    name='urocksdb',
+    version= __version__,
+    author='asif imran',
+    author_email='covariantmonkey@gmail.com',
+    description='python bindings to rocksdb with additional features',
     long_description='',
     packages=find_packages('src'),
     package_dir={'':'src'},
-
-    ext_modules=[CMakeExtension('pyrocksdb/pyrocksdb')],
+    requirements = ['pip', 'packaging', 'setuptools', 'pybind'],
+    ext_modules=[CMakeExtension('urocksdb/urocksdb')],
     cmdclass=dict(build_ext=CMakeBuild),
     tests_require=['pytest'],
     setup_requires=['pytest-runner'],

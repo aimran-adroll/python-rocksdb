@@ -1,9 +1,0 @@
-#include <pybind11/pybind11.h>
-#include <iostream>
-#include "pyrocksdb.hpp"
-
-namespace py = pybind11;
-
-void init_slice(py::module & m) {
-  py::class_<Slice>(m, "Slice");
-}
