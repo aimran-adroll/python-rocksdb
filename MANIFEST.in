@@ -1,0 +1,3 @@
+include CMakeLists.txt
+recursive-include src urocksdb/*.cpp
+recursive-include include urocksdb/*.hpp
