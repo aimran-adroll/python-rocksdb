@@ -55,7 +55,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python: [3.7]
+        bitness: 
+          - 64
+        python: [37]
+        manylinux_image: [manylinux_2_24_x86_64]
 
     steps:
       - name: Checkout urocksdb 
@@ -73,8 +76,6 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
 
       - name: Install libraries
         run: |
@@ -84,6 +85,8 @@ jobs:
 
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==1.6.3
+        env: 
+          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.manylinux_image }}
 
       - name: Build wheel
         run: python -m cibuildwheel --output-dir wheelhouse
