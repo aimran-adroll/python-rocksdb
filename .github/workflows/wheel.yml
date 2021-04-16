@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - urocksdb
+    tags:
+      - v*
 
 defaults:
   run:
