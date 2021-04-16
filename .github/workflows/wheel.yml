@@ -49,21 +49,13 @@ jobs:
 
 
   build_wheels:
-    name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform_id }}-${{ matrix.manylinux_image }}
+    name: Build wheel for cp${{ matrix.python }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
         python: [37]
-        bitness:
-          - 64
-        manylinux_image: 
-          - x86_64
-        include:
-          - os: ubuntu-latest
-            bitness: 64
-            platform_id: x86_64
 
     steps:
       - name: Checkout urocksdb 
