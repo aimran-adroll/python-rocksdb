@@ -11,43 +11,43 @@ defaults:
     shell: bash
 
 jobs:
-    build_sdist:
-      name: Build SDist
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
+  build_sdist:
+    name: Build SDist
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
   
-      - name: Ensure latest rocksdb
-        run: |
-          echo `pwd`
-          cd lib/rocksdb
-          git checkout master
-          git pull
-          cd ../..
+    - name: Ensure latest rocksdb
+      run: |
+        echo `pwd`
+        cd lib/rocksdb
+        git checkout master
+        git pull
+        cd ../..
   
-      - name: Install deps
-        run: python -m pip install twine build
+    - name: Install deps
+      run: python -m pip install twine build
   
-      - name: Install libraries
-        run: |
-          sudo apt-get install -y \
-            cmake \
-            libgflags-dev libsnappy-dev liblz4-dev libzstd-dev
+    - name: Install libraries
+      run: |
+        sudo apt-get install -y \
+          cmake \
+          libgflags-dev libsnappy-dev liblz4-dev libzstd-dev
   
-      - name: Build SDist
-        run: python -m build -s
+    - name: Build SDist
+      run: python -m build -s
   
-      - name: Check metadata
-        run: twine check dist/*
+    - name: Check metadata
+      run: twine check dist/*
   
-      - uses: actions/upload-artifact@v2
-        with:
-          path: dist/*
+    - uses: actions/upload-artifact@v2
+      with:
+        path: dist/*
 
 
   build_wheels:
