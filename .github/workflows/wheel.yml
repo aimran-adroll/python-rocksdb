@@ -45,6 +45,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
+        bitness:
+          - 64
+        manylinux_image: 
+          - manylinux_2_24_x86_64
 
     steps:
     - uses: actions/checkout@v2
