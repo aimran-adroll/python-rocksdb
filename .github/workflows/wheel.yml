@@ -11,43 +11,43 @@ defaults:
     shell: bash
 
 jobs:
-  #  build_sdist:
-  #    name: Build SDist
-  #    runs-on: ubuntu-latest
-  #    steps:
-  #    - uses: actions/checkout@v2
-  #      with:
-  #        submodules: true
-  #    - uses: actions/setup-python@v2
-  #      with:
-  #        python-version: 3.7
-  #
-  #    - name: Ensure latest rocksdb
-  #      run: |
-  #        echo `pwd`
-  #        cd lib/rocksdb
-  #        git checkout master
-  #        git pull
-  #        cd ../..
-  #
-  #    - name: Install deps
-  #      run: python -m pip install twine build
-  #
-  #    - name: Install libraries
-  #      run: |
-  #        sudo apt-get install -y \
-  #          cmake \
-  #          libgflags-dev libsnappy-dev liblz4-dev libzstd-dev
-  #
-  #    - name: Build SDist
-  #      run: python -m build -s
-  #
-  #    - name: Check metadata
-  #      run: twine check dist/*
-  #
-  #    - uses: actions/upload-artifact@v2
-  #      with:
-  #        path: dist/*.tar.gz
+    build_sdist:
+      name: Build SDist
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+  
+      - name: Ensure latest rocksdb
+        run: |
+          echo `pwd`
+          cd lib/rocksdb
+          git checkout master
+          git pull
+          cd ../..
+  
+      - name: Install deps
+        run: python -m pip install twine build
+  
+      - name: Install libraries
+        run: |
+          sudo apt-get install -y \
+            cmake \
+            libgflags-dev libsnappy-dev liblz4-dev libzstd-dev
+  
+      - name: Build SDist
+        run: python -m build -s
+  
+      - name: Check metadata
+        run: twine check dist/*
+  
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist/*
 
 
   build_wheels:
@@ -64,14 +64,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
-
-      - name: Ensure latest rocksdb
-        run: |
-          echo `pwd`
-          cd lib/rocksdb
-          git checkout master
-          git pull
-          cd ../..
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -92,34 +84,27 @@ jobs:
         run: ls -lh wheelhouse
         shell: bash
 
-      - name: Verify clean directory
-        run: git diff --exit-code
-        shell: bash
-
       - name: Upload wheels
         uses: actions/upload-artifact@v2
         with:
           path: wheelhouse/*.whl
 
 
-#  upload_all:
-#    name: Upload if release
-#    needs: [build_wheels, build_sdist]
-#    runs-on: ubuntu-latest
-#    if: github.event_name == 'release' && github.event.action == 'published'
-#
-#    steps:
-#    - uses: actions/setup-python@v2
-#
-#    - uses: actions/download-artifact@v2
-#      with:
-#        name: artifact
-#        path: dist
-#
-#    - uses: pypa/gh-action-pypi-publish@v1.4.1
-#      with:
-#        user: __token__
-#        password: ${{ secrets.pypi_password }}
-#
+  upload_all:
+    name: Upload if release
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
 
+    steps:
+    - uses: actions/setup-python@v2
 
+    - uses: actions/download-artifact@v2
+      with:
+        name: artifact
+        path: dist
+
+    - uses: pypa/gh-action-pypi-publish@v1.4.1
+      with:
+        user: __token__
+        password: ${{ secrets.pypi_password }}
