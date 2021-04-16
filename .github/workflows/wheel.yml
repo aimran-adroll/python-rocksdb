@@ -51,15 +51,13 @@ jobs:
 
 
   build_wheels:
-    name: Build wheel for cp${{ matrix.python }}
+    name: Build wheel for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python: [37]
-        manylinux_image: [manylinux2010]
-        platform_id: [manylinux_x86_64]
+        arch: [x86_64]
 
     steps:
       - name: Checkout urocksdb 
@@ -77,11 +75,15 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
 
       - name: Build wheel
         env: 
-          CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform_id }}
-          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.manylinux_image }}
+          CIBW_ARCHS_LINUX: ${{matrix.arch}}
+          CIBW_BUILD: "cp37-*"
+          CIBW_BEFORE_ALL_LINUX: apt-get install -y cmake libgflags-dev libsnappy-dev liblz4-dev libzstd-dev
+          CIBW_BEFORE_BUILD: "pip install flake8 pytest"
         
         run: bash .github/scripts/build_wheels.sh
 
