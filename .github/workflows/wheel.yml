@@ -55,7 +55,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python: [37]
+        python: [38]
 
     steps:
       - name: Checkout urocksdb 
