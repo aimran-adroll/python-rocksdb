@@ -59,6 +59,7 @@ void init_option(py::module & m) {
 
 
   py::class_<rocksdb::IngestExternalFileOptions>(m,"IngestExternalFileOptions")
+    .def_readwrite("move_files", &rocksdb::IngestExternalFileOptions::move_files)
     .def(py::init<>());
 
 
