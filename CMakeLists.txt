@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(python_cpp_example)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 SET(SOURCE_DIR "src/urocksdb")
 include_directories(${SOURCE_DIR})
@@ -11,6 +12,8 @@ SET ( WITH_SNAPPY ON CACHE BOOL "BUILD ROCKSDB WITH SNAPPY" FORCE)
 SET ( WITH_ZSTD ON CACHE BOOL "BUILD ROCKSDB WITH ZSTD" FORCE)
 SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 SET (USE_RTTI ON)
+SET (PORTABLE ON)
+SET (FORCE_AVX2 ON)
 add_subdirectory(lib/rocksdb)
 
 SET ( CMAKE_CXX_FLAGS "-std=c++11")
