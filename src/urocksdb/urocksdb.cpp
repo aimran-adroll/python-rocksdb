@@ -207,6 +207,7 @@ void init_merge_operator(py::module &);
 void init_transaction_db(py::module &);
 void init_snapshot(py::module &);
 void init_sst_file_writer(py::module &);
+void init_sst_file_reader(py::module &);
 void init_compression_types(py::module &);
 
 PYBIND11_MODULE(urocksdb, m) {
@@ -252,6 +253,7 @@ PYBIND11_MODULE(urocksdb, m) {
   init_status(m);
   init_write_batch(m);
   init_sst_file_writer(m);
+  init_sst_file_reader(m);
   init_iterator(m);
   init_filter_policy(m);
   init_merge_operator(m);

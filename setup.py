@@ -14,7 +14,7 @@ from setuptools.command.test import test as TestCommand
 from shutil import copyfile, copymode
 import glob
 
-__version__ = "1.1.3"
+__version__ = "1.1.4"
 
 
 class CMakeExtension(Extension):

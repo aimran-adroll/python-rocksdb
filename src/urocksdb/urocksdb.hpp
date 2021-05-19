@@ -10,6 +10,7 @@
 #include <rocksdb/table.h>
 #include <rocksdb/filter_policy.h>
 #include <rocksdb/sst_file_writer.h>
+#include <rocksdb/sst_file_reader.h>
 #include <rocksdb/cache.h>
 #include <rocksdb/snapshot.h>
 #include <rocksdb/compression_type.h>
